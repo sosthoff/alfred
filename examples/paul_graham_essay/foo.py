@@ -6,6 +6,7 @@ from llama_index import LangchainEmbedding
 import pandas as pd
 from langchain import OpenAI
 from sqlalchemy import create_engine
+import openai
 
 # define LLM
 llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-002"))
@@ -52,9 +53,20 @@ query_engine = index.as_query_engine(
 )
 response = query_engine.query(query_str)
 
-str(response)
+
+gpt_q = "Given the question: " + query_str + "And the answer: " + str(response) + ". Can you formulate an comprehensive answer?"
+
+completion = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {"role": "user", "content": gpt_q}
+  ]
+)
+print(gpt_q)
+print("-----")
+print(completion.choices[0].message.content)
 
 # response.extra_info
 
 # index.storage_context.persist(persist_dir="./storage")
-print(response)
+# print(response)
