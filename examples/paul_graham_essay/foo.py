@@ -8,7 +8,7 @@ from langchain import OpenAI
 from sqlalchemy import create_engine
 
 # define LLM
-llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-ada-001"))
+llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-002"))
 # define prompt helper
 # set maximum input size
 max_input_size = 2048
@@ -39,7 +39,7 @@ index = GPTSQLStructStoreIndex(
     [],
     sql_database=sql_database, service_context=service_context
 )
-query_str = "Who knows most about the world?"
+query_str = "Who knows John Doe?"
 
 context_builder.query_index_for_context(table_schema_index, query_str, store_context_str=True)
 context_container = context_builder.build_context_container()
@@ -50,7 +50,6 @@ context_container = context_builder.build_context_container()
 query_engine = index.as_query_engine(
     sql_context_container=context_container
 )
-breakpoint()
 response = query_engine.query(query_str)
 
 str(response)
